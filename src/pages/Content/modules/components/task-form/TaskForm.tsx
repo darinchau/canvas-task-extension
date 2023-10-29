@@ -17,6 +17,7 @@ import DatePick from './components/DatePick';
 import RecurCheckbox from './components/RecurCheckbox';
 import TextInput from './components/TextInput';
 import TimePick from './components/TimePick';
+import ComboBox from './components/ComboBox';
 import dashCourses from '../../utils/dashCourses';
 
 type FormContainerProps = {
@@ -83,6 +84,7 @@ export default function TaskForm({
   );
   const [selectedTime, setSelectedTime] = useState('1439');
   const [recurrences, setRecurrences] = useState(1);
+  const [duplicates, setDuplicates] = useState(1);
   const { data: courses } = useCourses();
   const { data: courseMap } = useCourseNames();
   const { data: colors } = useCourseColors();
@@ -118,57 +120,73 @@ export default function TaskForm({
     selectedCourse || ''
   );
 
+  // Submits the task creation
   async function submit() {
     setErrorMessage('');
     const recurringAssignments = [];
     const RECUR_DELTA = 7; // num days to recur
-    for (let i = 0; i < recurrences; i++) {
-      const assignment: FinalAssignment = {
-        ...AssignmentDefaults,
-      } as FinalAssignment;
-      assignment.name = title;
-      const dueDate = new Date(
-        (selectedDate ? selectedDate?.valueOf() : new Date().valueOf()) +
-          i * (RECUR_DELTA * 24 * 60 * 60 * 1000)
-      );
-      dueDate.setHours(parseInt(selectedTime) / 60);
-      dueDate.setMinutes(parseInt(selectedTime) % 60);
-      dueDate.setSeconds(0);
-      assignment.due_at = dueDate.toISOString();
-      assignment.course_id =
-        selectedCourseId === ''
-          ? AssignmentDefaults.course_id
-          : selectedCourseId;
-      assignment.course_name =
-        courseMap && selectedCourseId in courseMap
-          ? courseMap[selectedCourseId]
-          : 'Custom Task';
-      assignment.color =
-        colors && selectedCourseId in colors
-          ? colors[selectedCourseId]
-          : themeColor;
-      assignment.position =
-        positions && selectedCourseId in positions
-          ? positions[selectedCourseId]
-          : AssignmentDefaults.position;
-      assignment.type = AssignmentType.NOTE;
-      assignment.id = '' + Math.floor(1000000 * Math.random());
 
-      const res = await createCustomTask(
-        title,
-        assignment.due_at,
-        assignment.course_id
-      );
-      if (!res && !isDemo()) {
-        setErrorMessage(
-          'An error occurred. Make sure you have cookies enabled.'
+    // Push assignment onto lists
+    for (let i = 0; i < recurrences; i++) {
+      for (let j = 0; j < duplicates; j++) {
+        // Create a new task
+        const assignment: FinalAssignment = {
+          ...AssignmentDefaults,
+        } as FinalAssignment;
+
+        // Set assignment details
+        assignment.name = title;
+
+        const dueDate = new Date(
+          (selectedDate ? selectedDate?.valueOf() : new Date().valueOf()) +
+            i * (RECUR_DELTA * 24 * 60 * 60 * 1000)
         );
-      } else {
-        assignment.id =
-          res && !!res.id ? res.id.toString() : assignment.id.toString();
-        assignment.plannable_id = assignment.id.toString(); // for marking completing right after creating
+        dueDate.setHours(parseInt(selectedTime) / 60);
+        dueDate.setMinutes(parseInt(selectedTime) % 60);
+        dueDate.setSeconds(0);
+        assignment.due_at = dueDate.toISOString();
+
+        assignment.course_id =
+          selectedCourseId === ''
+            ? AssignmentDefaults.course_id
+            : selectedCourseId;
+
+        assignment.course_name =
+          courseMap && selectedCourseId in courseMap
+            ? courseMap[selectedCourseId]
+            : 'Custom Task';
+
+        assignment.color =
+          colors && selectedCourseId in colors
+            ? colors[selectedCourseId]
+            : themeColor;
+
+        assignment.position =
+          positions && selectedCourseId in positions
+            ? positions[selectedCourseId]
+            : AssignmentDefaults.position;
+
+        assignment.type = AssignmentType.NOTE;
+        assignment.id = '' + Math.floor(1000000 * Math.random());
+
+        const res = await createCustomTask(
+          title,
+          assignment.due_at,
+          assignment.course_id
+        );
+
+        // Attempt to submit assignment
+        if (!res && !isDemo()) {
+          setErrorMessage(
+            'An error occurred. Make sure you have cookies enabled.'
+          );
+        } else {
+          assignment.id =
+            res && !!res.id ? res.id.toString() : assignment.id.toString();
+          assignment.plannable_id = assignment.id.toString(); // for marking completing right after creating
+        }
+        recurringAssignments.push(assignment);
       }
-      recurringAssignments.push(assignment);
     }
 
     if (onSubmit) onSubmit(recurringAssignments);
@@ -179,7 +197,6 @@ export default function TaskForm({
   return (
     <FormContainer visible={visible}>
       <Form dark={darkMode}>
-
         {/* Task title */}
         <FormItem>
           <FormTitle>
@@ -222,6 +239,16 @@ export default function TaskForm({
             dark={darkMode}
             recurrences={recurrences}
             setRecurrences={setRecurrences}
+          />
+        </FormItem>
+
+        {/* Duplicate? */}
+        <FormItem>
+          <FormTitle>{duplicateLabel}</FormTitle>
+          <ComboBox
+            maxDuplication={10}
+            onChange={setDuplicates}
+            value={duplicates}
           />
         </FormItem>
 
