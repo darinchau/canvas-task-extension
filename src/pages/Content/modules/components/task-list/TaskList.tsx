@@ -387,6 +387,8 @@ export default function TaskList({
           />
         </ConfettiWrapper>
       )}
+
+      {/* LHS Tab */}
       <HideDiv visible={currentTab === 'Announcements'}>
         <ListContainer>
           <NodeGroup
@@ -401,7 +403,13 @@ export default function TaskList({
           {announcementList.length === 0 && <span>{noneText}</span>}
         </ListContainer>
       </HideDiv>
+
+      {/* Middle tab */}
       <HideDiv visible={currentTab === 'Unfinished'}>
+        <CreateTaskCard
+          onSubmit={createAssignment}
+          selectedCourse={selectedCourseId}
+        />
         <ListContainer>
           <NodeGroup
             data={loading ? [] : unfinishedList}
@@ -412,14 +420,10 @@ export default function TaskList({
           >
             {(nodes) => <>{nodes.map(dataToComponentFunc('Unfinished'))}</>}
           </NodeGroup>
-          {(allList['Unfinished'].length <= 4 || viewingMore) && (
-            <CreateTaskCard
-              onSubmit={createAssignment}
-              selectedCourse={selectedCourseId}
-            />
-          )}
         </ListContainer>
       </HideDiv>
+
+      {/* Dont know where this comes from */}
       <HideDiv visible={currentTab === 'NeedsGrading'}>
         <ListContainer>
           <NodeGroup
@@ -435,6 +439,7 @@ export default function TaskList({
         </ListContainer>
       </HideDiv>
 
+      {/* RHS Tab */}
       <HideDiv visible={currentTab === 'Completed'}>
         <ListContainer>
           <NodeGroup
