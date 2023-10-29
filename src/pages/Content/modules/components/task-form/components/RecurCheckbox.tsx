@@ -50,7 +50,9 @@ type Props = {
   recurrences: number;
   setRecurrences: (value: number) => void;
 };
-
+/**
+ * The checkbox for new task recurring weekly
+ */
 export default function RecurCheckbox({
   color,
   recurrences,

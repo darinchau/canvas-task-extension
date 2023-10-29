@@ -106,6 +106,7 @@ export default function TaskForm({
   const titleLabel = 'Title';
   const dateLabel = 'Due Date';
   const courseLabel = 'Course (optional)';
+  const duplicateLabel = 'Create how many?';
   const [errorMessage, setErrorMessage] = useState('');
 
   function setSelected(date?: Date) {
@@ -178,6 +179,8 @@ export default function TaskForm({
   return (
     <FormContainer visible={visible}>
       <Form dark={darkMode}>
+
+        {/* Task title */}
         <FormItem>
           <FormTitle>
             {titleLabel}
@@ -190,6 +193,8 @@ export default function TaskForm({
             value={title}
           />
         </FormItem>
+
+        {/* Due Date */}
         <FormItem>
           <FormTitle>{dateLabel}</FormTitle>
           <DatePick
@@ -199,6 +204,8 @@ export default function TaskForm({
             setSelected={setSelected}
           />
         </FormItem>
+
+        {/* Due Date pick time */}
         <FormItem>
           <TimePick
             color={themeColor}
@@ -207,6 +214,8 @@ export default function TaskForm({
             setSelected={setSelectedTime}
           />
         </FormItem>
+
+        {/* Repeat weekly? */}
         <FormItem>
           <RecurCheckbox
             color={themeColor}
@@ -215,6 +224,8 @@ export default function TaskForm({
             setRecurrences={setRecurrences}
           />
         </FormItem>
+
+        {/* Courses */}
         <FormItem>
           <FormTitle>{courseLabel}</FormTitle>
           <CourseDropdown
@@ -227,6 +238,8 @@ export default function TaskForm({
             setCourse={setSelectedCourseId}
           />
         </FormItem>
+
+        {/* Submit */}
         <FormItem>
           <Button
             color={themeColor}

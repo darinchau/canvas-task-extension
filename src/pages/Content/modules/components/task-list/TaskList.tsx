@@ -70,7 +70,7 @@ export interface TaskListProps {
   weekKey: string; // unique key value for same headings between different weeks
 }
 
-/*
+/**
   Renders all unfinished assignments
 */
 export default function TaskList({

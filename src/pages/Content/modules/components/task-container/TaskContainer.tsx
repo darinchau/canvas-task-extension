@@ -23,7 +23,7 @@ export interface TaskContainerProps {
   endDate?: Date;
 }
 
-/*
+/**
   Main app component that renders all async content
 */
 
