@@ -71,7 +71,7 @@ export interface TaskListProps {
 }
 
 /**
-  Renders all unfinished assignments
+  Renders everything below the pie chart thing
 */
 export default function TaskList({
   announcements,
@@ -185,6 +185,7 @@ export default function TaskList({
 
   const noneText = 'None';
 
+  // Attempts to mark an assignment as complete
   function markAssignmentFunc(
     id: string,
     tab: TaskTypeTab,
@@ -367,14 +368,14 @@ export default function TaskList({
     );
   return (
     <ListWrapper>
-      <IconSubTabs
+      {/* <IconSubTabs
         activeColor={iconColor}
         dark={darkMode}
         gradebook={!!allGradingList.length}
         notifs={numNotifs}
         setTaskListState={setCurrentTab}
         taskListState={currentTab}
-      />
+      /> */}
       {showConfetti && (
         <ConfettiWrapper>
           <Confetti

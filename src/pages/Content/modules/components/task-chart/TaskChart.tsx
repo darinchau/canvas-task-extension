@@ -61,6 +61,9 @@ export interface TaskChartProps {
   weekKey?: string;
 }
 
+/**
+ * This renders the pie chart thing
+ */
 export default function TaskChart({
   assignments,
   courses,
