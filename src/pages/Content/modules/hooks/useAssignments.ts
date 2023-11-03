@@ -127,6 +127,25 @@ export function filterTimeBounds(
   endDate: Date,
   assignments: FinalAssignment[]
 ): FinalAssignment[] {
+  // Override the settings if it is sunday 2359 becuase we want to show the full week
+  // function isMonday0000(date: Date): boolean {
+  //   return (
+  //     date.getDay() === 0 && date.getHours() === 23 && date.getMinutes() === 59
+  //   );
+  // }
+
+  // // Make it Monday 0000 to sunday 2359
+  // if (isSundayAt2359(startDate) && isSundayAt2359(endDate)) {
+  //   const oneWeek = 7 * 24 * 60 * 60 * 1000;
+  //   const timeDiff = endDate.getTime() - startDate.getTime();
+
+  //   if (timeDiff === oneWeek) {
+  //     startDate.setHours(0, 0, 0, 0);
+  //     endDate.setHours(0, 0, 0, 0);
+  //   }
+  // }
+
+  // console.log(`Filtering assignments between ${startDate} and ${endDate}`);
   return assignments.filter((assignment) => {
     const due_date = new Date(assignment.due_at);
     return (
@@ -233,6 +252,8 @@ export async function getAllAssignments(
   const en = new Date(endDate);
   en.setDate(en.getDate() + 1);
 
+  console.log(`Fucking1 assignments between ${startDate} and ${endDate}`);
+
   const startStr = st.toISOString().split('T')[0];
   const endStr = en.toISOString().split('T')[0];
   const data = isDemo()
@@ -270,6 +291,7 @@ export function processAssignmentList(
   return assignments;
 }
 
+/** Process assignments as a list of assignment datas */
 async function processAssignments(
   startDate: Date,
   endDate: Date,
@@ -291,6 +313,7 @@ async function processAssignments(
   );
 }
 
+/** Get all assignment data within start date and end date */
 export default function useAssignments(
   startDate: Date,
   endDate: Date,

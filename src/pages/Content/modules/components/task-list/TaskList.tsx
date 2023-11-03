@@ -368,6 +368,7 @@ export default function TaskList({
     );
   return (
     <ListWrapper>
+      {/* Icon tabs */}
       {/* <IconSubTabs
         activeColor={iconColor}
         dark={darkMode}
